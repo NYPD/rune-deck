@@ -7,8 +7,8 @@ import net.runelite.client.config.ConfigItem;
 @ConfigGroup("runedeck")
 public interface RuneDeckConfig extends Config {
 
-    @ConfigItem(keyName = "greeting", name = "Welcome Greeting", description = "The message to show to the user when they login")
-    default String greeting() {
-        return "Hello";
+    @ConfigItem(keyName = "socketPort", name = "Socket Port", description = "The port to use to communicate with the stream deck")
+    default int getSocketPort() {
+        return 42069;
     }
 }
