@@ -1,2 +1,2 @@
 # Example
-An example greeter plugin
+Back-end service for the Rune Deck plugin
