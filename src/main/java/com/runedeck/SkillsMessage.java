@@ -3,8 +3,7 @@ package com.runedeck;
 import net.runelite.api.Client;
 import net.runelite.api.Skill;
 
-public class StreamDeckResponse {
-
+public class SkillsMessage extends StreamDeckMessage {
     private final int currentHealth;
     private final int totalHealth;
     private final int currentAttack;
@@ -52,8 +51,9 @@ public class StreamDeckResponse {
     private final int currentFarming;
     private final int totalFarming;
 
-    public StreamDeckResponse(Client client) {
-        this.currentHealth = client.getBoostedSkillLevel(Skill.HITPOINTS);
+    public SkillsMessage(Client client) {
+		super("skills");
+		this.currentHealth = client.getBoostedSkillLevel(Skill.HITPOINTS);
         this.totalHealth = client.getRealSkillLevel(Skill.HITPOINTS);
         this.currentAttack = client.getBoostedSkillLevel(Skill.ATTACK);
 		this.totalAttack = client.getRealSkillLevel(Skill.ATTACK);

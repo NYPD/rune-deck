@@ -45,9 +45,13 @@ public class WebSocketThread extends Thread {
         try {
             while (this.continueRunning.get()) {
                 if(this.client.getGameState().equals(GameState.LOGGED_IN)) {
-                    StreamDeckResponse streamDeckResponse = new StreamDeckResponse(this.client);
-                    String streamDeckResponseJSON = this.GSON.toJson(streamDeckResponse);
-                    this.runeDeckSocketServer.broadcast(streamDeckResponseJSON);
+                    SkillsMessage skillsMessage = new SkillsMessage(this.client);
+                    String skillsMessageJSON = this.GSON.toJson(skillsMessage);
+                    this.runeDeckSocketServer.broadcast(skillsMessageJSON);
+                }else{
+                    LogoutMessage logoutMessage = new LogoutMessage();
+                    String logoutMessageJSON = this.GSON.toJson(logoutMessage);
+                    this.runeDeckSocketServer.broadcast(logoutMessageJSON);
                 }
                 Thread.sleep(1000L);
             }
