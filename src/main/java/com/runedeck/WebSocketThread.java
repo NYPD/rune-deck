@@ -2,6 +2,7 @@ package com.runedeck;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import net.runelite.api.GameState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,11 +43,12 @@ public class WebSocketThread extends Thread {
     public void run() {
 
         try {
-
             while (this.continueRunning.get()) {
-                StreamDeckResponse streamDeckResponse = new StreamDeckResponse(this.client);
-                String streamDeckResponseJSON = this.GSON.toJson(streamDeckResponse);
-                this.runeDeckSocketServer.broadcast(streamDeckResponseJSON);
+                if(this.client.getGameState().equals(GameState.LOGGED_IN)) {
+                    StreamDeckResponse streamDeckResponse = new StreamDeckResponse(this.client);
+                    String streamDeckResponseJSON = this.GSON.toJson(streamDeckResponse);
+                    this.runeDeckSocketServer.broadcast(streamDeckResponseJSON);
+                }
                 Thread.sleep(1000L);
             }
         }

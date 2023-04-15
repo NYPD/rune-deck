@@ -26,7 +26,7 @@ public class RuneDeckSocketServer extends WebSocketServer {
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        LOGGER.info(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " clsoed connection");
+        LOGGER.info("Closed connection");
     }
 
     @Override
