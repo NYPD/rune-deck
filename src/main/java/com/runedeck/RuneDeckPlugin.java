@@ -2,6 +2,8 @@ package com.runedeck;
 
 import javax.inject.Inject;
 
+import com.google.gson.Gson;
+import net.runelite.api.events.GameTick;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +21,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 public class RuneDeckPlugin extends Plugin {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RuneDeckConfig.class);
+    private final Gson GSON = new Gson();
 
     @Inject
     private Client client;
@@ -26,7 +29,6 @@ public class RuneDeckPlugin extends Plugin {
     private RuneDeckConfig config;
 
     private RuneDeckSocketServer runeDeckSocketServer;
-    private WebSocketThread webSocketThread;
 
     @Override
     protected void startUp() throws Exception {
@@ -36,16 +38,23 @@ public class RuneDeckPlugin extends Plugin {
 
     @Override
     protected void shutDown() throws Exception {
-        this.webSocketThread.stopSocketThread();
+        this.runeDeckSocketServer.stop();
     }
 
     @Subscribe
     public void onGameStateChanged(GameStateChanged gameStateChanged) {
-
-        if (gameStateChanged.getGameState() == GameState.LOGGED_IN) {
-            this.webSocketThread = new WebSocketThread(this.runeDeckSocketServer, this.client);
+        if (gameStateChanged.getGameState() != GameState.LOGGED_IN) {
+            LogoutPayload logoutPayload = new LogoutPayload();
+            String payloadJSON = this.GSON.toJson(logoutPayload);
+            this.runeDeckSocketServer.broadcast(payloadJSON);
         }
+    }
 
+    @Subscribe
+    public void onGameTick(GameTick tick){
+            TickPayload tickPayload = new TickPayload(this.client);
+            String payloadJSON = this.GSON.toJson(tickPayload);
+            this.runeDeckSocketServer.broadcast(payloadJSON);
     }
 
     @Provides

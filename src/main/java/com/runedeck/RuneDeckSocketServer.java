@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RuneDeckSocketServer extends WebSocketServer {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(RuneDeckSocketServer.class);
 
     public RuneDeckSocketServer(int port) throws UnknownHostException {
@@ -30,7 +29,9 @@ public class RuneDeckSocketServer extends WebSocketServer {
     }
 
     @Override
-    public void onMessage(WebSocket conn, String message) {}
+    public void onMessage(WebSocket conn, String message) {
+        LOGGER.info(message);
+    }
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
@@ -47,5 +48,4 @@ public class RuneDeckSocketServer extends WebSocketServer {
         System.out.println("RuneDeckSocketServer started on port: " + this.getPort());
         this.setConnectionLostTimeout(60);
     }
-
 }
