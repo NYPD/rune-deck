@@ -43,7 +43,7 @@ public class RuneDeckPlugin extends Plugin {
 
     @Subscribe
     public void onGameStateChanged(GameStateChanged gameStateChanged) {
-        if (gameStateChanged.getGameState() != GameState.LOGGED_IN) {
+        if (gameStateChanged.getGameState() != GameState.LOGGED_IN && gameStateChanged.getGameState() != GameState.LOADING) {
             LogoutPayload logoutPayload = new LogoutPayload();
             String payloadJSON = this.GSON.toJson(logoutPayload);
             this.runeDeckSocketServer.broadcast(payloadJSON);
@@ -52,10 +52,11 @@ public class RuneDeckPlugin extends Plugin {
 
     @Subscribe
     public void onGameTick(GameTick tick){
+            // remove any unique stats that we don't need and then check if the tick payload json is the same and then don't send duplicate messages
             TickPayload tickPayload = new TickPayload(this.client);
             String payloadJSON = this.GSON.toJson(tickPayload);
             this.runeDeckSocketServer.broadcast(payloadJSON);
-    }
+     }
 
     @Provides
     RuneDeckConfig provideConfig(ConfigManager configManager) {
