@@ -6,7 +6,6 @@ public class TickPayload extends StreamDeckPayload {
     private final Skills skills;
     private final int fps;
     private final int energy;
-    private final int timeout; // The remaining tick before the user is timed out
     private final Offer[] grandExchangeOffers;
     private final int[] playerEquipmentIds;
     private final boolean isInteracting;
@@ -26,7 +25,6 @@ public class TickPayload extends StreamDeckPayload {
         this.skills = new Skills(client);
         this.fps = client.getFPS();
         this.energy = client.getEnergy();
-        this.timeout = client.getIdleTimeout();
         this.isInteracting = client.getLocalPlayer().isInteracting();
         this.combatLevel = client.getLocalPlayer().getCombatLevel();
         this.coordinateX = client.getLocalPlayer().getWorldLocation().getX();
@@ -54,14 +52,9 @@ public class TickPayload extends StreamDeckPayload {
         return energy;
     }
 
-    public int getTimeout() {
-        return timeout;
-    }
-
     public Offer[] getGrandExchangeOffers() {
         return grandExchangeOffers;
     }
-
 
     public Skills getSkills() {
         return skills;

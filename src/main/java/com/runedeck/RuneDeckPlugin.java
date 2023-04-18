@@ -47,20 +47,20 @@ public class RuneDeckPlugin extends Plugin {
             LogoutPayload logoutPayload = new LogoutPayload();
             String payloadJSON = this.GSON.toJson(logoutPayload);
             this.runeDeckSocketServer.broadcast(payloadJSON);
+        } else {
+            this.runeDeckSocketServer.setLastSentTickMessage("");
         }
     }
 
     @Subscribe
     public void onGameTick(GameTick tick){
-            // remove any unique stats that we don't need and then check if the tick payload json is the same and then don't send duplicate messages
             TickPayload tickPayload = new TickPayload(this.client);
-            String payloadJSON = this.GSON.toJson(tickPayload);
-            this.runeDeckSocketServer.broadcast(payloadJSON);
+            String tickPayloadJSON = this.GSON.toJson(tickPayload);
+            this.runeDeckSocketServer.sendMessage(tickPayloadJSON);
      }
 
     @Provides
     RuneDeckConfig provideConfig(ConfigManager configManager) {
         return configManager.getConfig(RuneDeckConfig.class);
     }
-
 }

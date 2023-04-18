@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RuneDeckSocketServer extends WebSocketServer {
+    private String lastSentTickMessage = "";
     private static final Logger LOGGER = LoggerFactory.getLogger(RuneDeckSocketServer.class);
 
     public RuneDeckSocketServer(int port) throws UnknownHostException {
@@ -21,6 +22,7 @@ public class RuneDeckSocketServer extends WebSocketServer {
         //conn.send("connected");
         System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected!");
         LOGGER.info(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected!");
+        lastSentTickMessage = "";
     }
 
     @Override
@@ -31,10 +33,12 @@ public class RuneDeckSocketServer extends WebSocketServer {
     @Override
     public void onMessage(WebSocket conn, String message) {
         LOGGER.info(message);
+        lastSentTickMessage = "";
     }
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
+        lastSentTickMessage = "";
         LOGGER.error(ex.getMessage());
         ex.printStackTrace();
         if (conn != null) {
@@ -47,5 +51,17 @@ public class RuneDeckSocketServer extends WebSocketServer {
         LOGGER.info("RuneDeckSocketServer started on port: " + this.getPort());
         System.out.println("RuneDeckSocketServer started on port: " + this.getPort());
         this.setConnectionLostTimeout(60);
+        lastSentTickMessage = "";
+    }
+
+    public void sendMessage(String message) {
+        if (!this.lastSentTickMessage.equals(message)) {
+            this.broadcast(message);
+            this.lastSentTickMessage = message;
+        }
+    }
+
+    public void setLastSentTickMessage(String lastSentTickMessage) {
+        this.lastSentTickMessage = lastSentTickMessage;
     }
 }
