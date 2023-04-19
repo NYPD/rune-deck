@@ -1,9 +1,9 @@
-package com.runedeck;
+package com.runedeck.payload;
 
-abstract public class StreamDeckPayload {
+abstract public class Payload {
     private final String type;
 
-    protected StreamDeckPayload(String type) {
+    protected Payload(String type) {
         this.type = type;
     }
 

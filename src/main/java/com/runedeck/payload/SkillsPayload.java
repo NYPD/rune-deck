@@ -1,138 +1,11 @@
-package com.runedeck;
+package com.runedeck.payload;
 
-import net.runelite.api.*;
+import net.runelite.api.Client;
+import net.runelite.api.Skill;
 
-public class TickPayload extends StreamDeckPayload {
-    private final Skills skills;
-    private final int fps;
-    private final int energy;
-    private final Offer[] grandExchangeOffers;
-    private final int[] playerEquipmentIds;
-    private final boolean isInteracting;
-    private final int combatLevel;
-    private final String overheadIcon;
-    private final String skullIcon;
-    private final int coordinateX;
-    private final int coordinateY;
+import java.util.Objects;
 
-    public TickPayload(Client client){
-        super("tick");
-        SkullIcon skullIcon = client.getLocalPlayer().getSkullIcon();
-        HeadIcon overheadIcon = client.getLocalPlayer().getOverheadIcon();
-        PlayerComposition composition = client.getLocalPlayer().getPlayerComposition();
-        GrandExchangeOffer[] offers = client.getGrandExchangeOffers();
-
-        this.skills = new Skills(client);
-        this.fps = client.getFPS();
-        this.energy = client.getEnergy();
-        this.isInteracting = client.getLocalPlayer().isInteracting();
-        this.combatLevel = client.getLocalPlayer().getCombatLevel();
-        this.coordinateX = client.getLocalPlayer().getWorldLocation().getX();
-        this.coordinateY = client.getLocalPlayer().getWorldLocation().getY();
-        this.playerEquipmentIds = composition != null ? composition.getEquipmentIds() : null;
-        this.overheadIcon = overheadIcon != null ? overheadIcon.name() : null;
-        this.skullIcon = skullIcon != null ? skullIcon.name() : null;
-
-        grandExchangeOffers = new Offer[offers.length];
-
-        for(int i =0; i < offers.length; i++){
-            grandExchangeOffers[i] = new Offer(offers[i]);
-        }
-    }
-
-    public Skills getSkillsMessage() {
-        return skills;
-    }
-
-    public int getFps() {
-        return fps;
-    }
-
-    public int getEnergy() {
-        return energy;
-    }
-
-    public Offer[] getGrandExchangeOffers() {
-        return grandExchangeOffers;
-    }
-
-    public Skills getSkills() {
-        return skills;
-    }
-
-    public int[] getPlayerEquipmentIds() {
-        return playerEquipmentIds;
-    }
-
-    public boolean isInteracting() {
-        return isInteracting;
-    }
-
-    public int getCombatLevel() {
-        return combatLevel;
-    }
-
-    public String getOverheadIcon() {
-        return overheadIcon;
-    }
-
-    public String getSkullIcon() {
-        return skullIcon;
-    }
-
-    public int getCoordinateX() {
-        return coordinateX;
-    }
-
-    public int getCoordinateY() {
-        return coordinateY;
-    }
-}
-
-class Offer{
-    private final int itemId;
-    private final int price;
-    private final int quantitySold;
-    private final int spent;
-    private final int totalQuantity;
-    private final String state;
-
-    Offer(GrandExchangeOffer offer) {
-        this.itemId = offer.getItemId();
-        this.price = offer.getPrice();
-        this.quantitySold = offer.getQuantitySold();
-        this.spent = offer.getSpent();
-        this.totalQuantity = offer.getTotalQuantity();
-        this.state = offer.getState().name();
-    }
-
-    public int getItemId() {
-        return itemId;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public int getQuantitySold() {
-        return quantitySold;
-    }
-
-    public int getSpent() {
-        return spent;
-    }
-
-    public int getTotalQuantity() {
-        return totalQuantity;
-    }
-
-    public String getState() {
-        return state;
-    }
-}
-
-
-class Skills {
+public class SkillsPayload extends Payload {
     private final int currentHealth;
     private final int totalHealth;
     private final int currentAttack;
@@ -179,8 +52,11 @@ class Skills {
     private final int totalWoodcutting;
     private final int currentFarming;
     private final int totalFarming;
+    private final int combatLevel;
 
-    Skills(Client client) {
+    public SkillsPayload(Client client) {
+        super(PayloadTypes.SKILLS);
+
         this.currentHealth = client.getBoostedSkillLevel(Skill.HITPOINTS);
         this.totalHealth = client.getRealSkillLevel(Skill.HITPOINTS);
         this.currentAttack = client.getBoostedSkillLevel(Skill.ATTACK);
@@ -227,6 +103,8 @@ class Skills {
         this.totalWoodcutting = client.getRealSkillLevel(Skill.WOODCUTTING);
         this.currentFarming = client.getBoostedSkillLevel(Skill.FARMING);
         this.totalFarming = client.getRealSkillLevel(Skill.FARMING);
+
+        this.combatLevel = client.getLocalPlayer().getCombatLevel();
     }
 
     public int getCurrentHealth() {
@@ -411,5 +289,22 @@ class Skills {
 
     public int getTotalFarming() {
         return this.totalFarming;
+    }
+
+    public int getCombatLevel() {
+        return this.combatLevel;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SkillsPayload that = (SkillsPayload) o;
+        return currentHealth == that.currentHealth && totalHealth == that.totalHealth && currentAttack == that.currentAttack && totalAttack == that.totalAttack && currentStrength == that.currentStrength && totalStrength == that.totalStrength && currentDefence == that.currentDefence && totalDefence == that.totalDefence && currentRange == that.currentRange && totalRange == that.totalRange && currentPrayer == that.currentPrayer && totalPrayer == that.totalPrayer && currentMagic == that.currentMagic && totalMagic == that.totalMagic && currentRunecrafting == that.currentRunecrafting && totalRunecrafting == that.totalRunecrafting && currentConstruction == that.currentConstruction && totalConstruction == that.totalConstruction && currentAgility == that.currentAgility && totalAgility == that.totalAgility && currentHerblore == that.currentHerblore && totalHerblore == that.totalHerblore && currentThieving == that.currentThieving && totalThieving == that.totalThieving && currentCrafting == that.currentCrafting && totalCrafting == that.totalCrafting && currentFletching == that.currentFletching && totalFletching == that.totalFletching && currentSlayer == that.currentSlayer && totalSlayer == that.totalSlayer && currentHunter == that.currentHunter && totalHunter == that.totalHunter && currentMining == that.currentMining && totalMining == that.totalMining && currentSmithing == that.currentSmithing && totalSmithing == that.totalSmithing && currentFishing == that.currentFishing && totalFishing == that.totalFishing && currentCooking == that.currentCooking && totalCooking == that.totalCooking && currentFiremaking == that.currentFiremaking && totalFiremaking == that.totalFiremaking && currentWoodcutting == that.currentWoodcutting && totalWoodcutting == that.totalWoodcutting && currentFarming == that.currentFarming && totalFarming == that.totalFarming && combatLevel == that.combatLevel;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(currentHealth, totalHealth, currentAttack, totalAttack, currentStrength, totalStrength, currentDefence, totalDefence, currentRange, totalRange, currentPrayer, totalPrayer, currentMagic, totalMagic, currentRunecrafting, totalRunecrafting, currentConstruction, totalConstruction, currentAgility, totalAgility, currentHerblore, totalHerblore, currentThieving, totalThieving, currentCrafting, totalCrafting, currentFletching, totalFletching, currentSlayer, totalSlayer, currentHunter, totalHunter, currentMining, totalMining, currentSmithing, totalSmithing, currentFishing, totalFishing, currentCooking, totalCooking, currentFiremaking, totalFiremaking, currentWoodcutting, totalWoodcutting, currentFarming, totalFarming, combatLevel);
     }
 }

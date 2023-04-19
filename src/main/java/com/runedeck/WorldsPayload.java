@@ -1,9 +1,10 @@
 package com.runedeck;
 
+import com.runedeck.payload.Payload;
 import net.runelite.api.Client;
 import net.runelite.api.World;
 
-public class WorldsPayload extends StreamDeckPayload {
+public class WorldsPayload extends Payload {
     private final World[] worlds;
     public WorldsPayload(Client client){
         super("worlds");
