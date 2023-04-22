@@ -1,5 +1,6 @@
 package com.runedeck.payload;
 
+import com.runedeck.PayloadCache;
 import net.runelite.api.Client;
 
 import java.util.Objects;
@@ -39,5 +40,14 @@ public class MovementPayload extends Payload {
 
     public int getCoordinateY() {
         return coordinateY;
+    }
+
+
+    @Override
+    public boolean isNewPayload(Client client) {
+        return this.getCoordinateX() != client.getLocalPlayer().getWorldLocation().getX()
+                || this.getCoordinateY() != client.getLocalPlayer().getWorldLocation().getY()
+                || this.getEnergy() != client.getEnergy();
+
     }
 }

@@ -16,7 +16,7 @@ public class GrandExchangePayload extends Payload {
 
         offers = new Offer[grandExchangeOffers.length];
 
-        for(int i =0; i < offers.length; i++){
+        for (int i = 0; i < offers.length; i++) {
             offers[i] = new Offer(grandExchangeOffers[i]);
         }
     }
@@ -37,9 +37,22 @@ public class GrandExchangePayload extends Payload {
     public Offer[] getOffers() {
         return offers;
     }
+
+    @Override
+    public boolean isNewPayload(Client client) {
+        GrandExchangeOffer[] grandExchangeOffers = client.getGrandExchangeOffers();
+
+        Offer[] newOffers = new Offer[grandExchangeOffers.length];
+
+        for (int i = 0; i < newOffers.length; i++) {
+            newOffers[i] = new Offer(grandExchangeOffers[i]);
+        }
+
+        return !Arrays.equals(this.getOffers(), newOffers);
+    }
 }
 
-class Offer{
+class Offer {
     private final int itemId;
     private final int price;
     private final int quantitySold;

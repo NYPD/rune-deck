@@ -5,11 +5,11 @@ import net.runelite.api.HeadIcon;
 
 import java.util.Objects;
 
-public class OverheadPayload extends Payload{
+public class OverheadPayload extends Payload {
 
     private final String overheadIcon;
 
-    public OverheadPayload(Client client){
+    public OverheadPayload(Client client) {
         super(PayloadTypes.OVERHEAD);
 
         HeadIcon overheadIcon = client.getLocalPlayer().getOverheadIcon();
@@ -31,5 +31,11 @@ public class OverheadPayload extends Payload{
 
     public String getOverheadIcon() {
         return overheadIcon;
+    }
+
+    @Override
+    public boolean isNewPayload(Client client) {
+        HeadIcon overheadIcon = client.getLocalPlayer().getOverheadIcon();
+        return overheadIcon == null ? this.getOverheadIcon() != null : !overheadIcon.name().equals(this.getOverheadIcon());
     }
 }

@@ -1,13 +1,14 @@
 package com.runedeck.payload;
 
+import com.runedeck.PayloadCache;
 import net.runelite.api.Client;
 
 import java.util.Objects;
 
-public class FPSPayload extends Payload{
+public class FPSPayload extends Payload {
     private final int fps;
 
-    public FPSPayload(Client client){
+    public FPSPayload(Client client) {
         super(PayloadTypes.FPS);
         this.fps = client.getFPS();
     }
@@ -28,4 +29,11 @@ public class FPSPayload extends Payload{
     public int getFps() {
         return fps;
     }
+
+    @Override
+    public boolean isNewPayload(Client client) {
+        return this.getFps() != client.getFPS();
+    }
+
+
 }

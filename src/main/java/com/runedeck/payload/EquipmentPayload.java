@@ -5,12 +5,10 @@ import net.runelite.api.PlayerComposition;
 
 import java.util.Arrays;
 
-public class EquipmentPayload extends Payload
-{
+public class EquipmentPayload extends Payload {
     private final int[] playerEquipmentIds;
 
-    public EquipmentPayload(Client client)
-    {
+    public EquipmentPayload(Client client) {
         super(PayloadTypes.EQUIPMENT);
 
         PlayerComposition composition = client.getLocalPlayer().getPlayerComposition();
@@ -30,9 +28,13 @@ public class EquipmentPayload extends Payload
         return Arrays.hashCode(playerEquipmentIds);
     }
 
-    public int[] getPlayerEquipmentIds()
-    {
+    public int[] getPlayerEquipmentIds() {
         return playerEquipmentIds;
     }
 
+    @Override
+    public boolean isNewPayload(Client client) {
+        PlayerComposition composition = client.getLocalPlayer().getPlayerComposition();
+        return composition == null ? this.getPlayerEquipmentIds() != null : !Arrays.equals(composition.getEquipmentIds(), this.getPlayerEquipmentIds());
+    }
 }

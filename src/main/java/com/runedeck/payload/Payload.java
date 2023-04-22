@@ -1,5 +1,7 @@
 package com.runedeck.payload;
 
+import net.runelite.api.Client;
+
 abstract public class Payload {
     private final String type;
 
@@ -10,4 +12,6 @@ abstract public class Payload {
     public String getType() {
         return type;
     }
+
+    public abstract boolean isNewPayload(Client client);
 }

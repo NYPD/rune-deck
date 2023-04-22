@@ -28,5 +28,10 @@ public class ActivityPayload extends Payload {
     public boolean isInteracting() {
         return isInteracting;
     }
+
+    @Override
+    public boolean isNewPayload(Client client) {
+        return this.isInteracting() != client.getLocalPlayer().isInteracting();
+    }
 }
 

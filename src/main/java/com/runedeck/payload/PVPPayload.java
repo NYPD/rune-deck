@@ -9,7 +9,7 @@ public class PVPPayload extends Payload {
 
     private final String skullIcon;
 
-    public PVPPayload(Client client){
+    public PVPPayload(Client client) {
         super(PayloadTypes.PVP);
         SkullIcon skullIcon = client.getLocalPlayer().getSkullIcon();
         this.skullIcon = skullIcon != null ? skullIcon.name() : null;
@@ -30,5 +30,11 @@ public class PVPPayload extends Payload {
 
     public String getSkullIcon() {
         return skullIcon;
+    }
+
+    @Override
+    public boolean isNewPayload(Client client) {
+        SkullIcon skullIcon = client.getLocalPlayer().getSkullIcon();
+        return skullIcon == null ? this.getSkullIcon() != null : !skullIcon.name().equals(this.getSkullIcon());
     }
 }

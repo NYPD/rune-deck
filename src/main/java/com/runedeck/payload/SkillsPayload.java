@@ -307,4 +307,36 @@ public class SkillsPayload extends Payload {
     public int hashCode() {
         return Objects.hash(currentHealth, totalHealth, currentAttack, totalAttack, currentStrength, totalStrength, currentDefence, totalDefence, currentRange, totalRange, currentPrayer, totalPrayer, currentMagic, totalMagic, currentRunecrafting, totalRunecrafting, currentConstruction, totalConstruction, currentAgility, totalAgility, currentHerblore, totalHerblore, currentThieving, totalThieving, currentCrafting, totalCrafting, currentFletching, totalFletching, currentSlayer, totalSlayer, currentHunter, totalHunter, currentMining, totalMining, currentSmithing, totalSmithing, currentFishing, totalFishing, currentCooking, totalCooking, currentFiremaking, totalFiremaking, currentWoodcutting, totalWoodcutting, currentFarming, totalFarming, combatLevel);
     }
+
+    @Override
+    public boolean isNewPayload(Client client) {
+        return this.currentHealth != client.getBoostedSkillLevel(Skill.HITPOINTS) ||
+                this.totalHealth != client.getRealSkillLevel(Skill.HITPOINTS) ||
+                this.currentAttack != client.getBoostedSkillLevel(Skill.ATTACK) ||
+                this.totalAttack != client.getRealSkillLevel(Skill.ATTACK) ||
+                this.currentStrength != client.getBoostedSkillLevel(Skill.STRENGTH) ||
+                this.totalStrength != client.getRealSkillLevel(Skill.STRENGTH) ||
+                this.currentDefence != client.getBoostedSkillLevel(Skill.DEFENCE) ||
+                this.totalDefence != client.getRealSkillLevel(Skill.DEFENCE) ||
+                this.currentRange != client.getBoostedSkillLevel(Skill.RANGED) ||
+                this.totalRange != client.getRealSkillLevel(Skill.RANGED) ||
+                this.currentPrayer != client.getBoostedSkillLevel(Skill.PRAYER) ||
+                this.totalPrayer != client.getRealSkillLevel(Skill.PRAYER) ||
+                this.currentMagic != client.getBoostedSkillLevel(Skill.MAGIC) ||
+                this.totalMagic != client.getRealSkillLevel(Skill.MAGIC) ||
+                this.currentRunecrafting != client.getBoostedSkillLevel(Skill.RUNECRAFT) ||
+                this.totalRunecrafting != client.getRealSkillLevel(Skill.RUNECRAFT) ||
+                this.currentConstruction != client.getBoostedSkillLevel(Skill.CONSTRUCTION) ||
+                this.totalConstruction != client.getRealSkillLevel(Skill.CONSTRUCTION) ||
+                this.currentAgility != client.getBoostedSkillLevel(Skill.AGILITY) ||
+                this.totalAgility != client.getRealSkillLevel(Skill.AGILITY) ||
+                this.currentHerblore != client.getBoostedSkillLevel(Skill.HERBLORE) ||
+                this.totalHerblore != client.getRealSkillLevel(Skill.HERBLORE) ||
+                this.currentThieving != client.getBoostedSkillLevel(Skill.THIEVING) ||
+                this.totalThieving != client.getRealSkillLevel(Skill.THIEVING) ||
+                this.currentCrafting != client.getBoostedSkillLevel(Skill.CRAFTING) ||
+                this.totalCrafting != client.getRealSkillLevel(Skill.CRAFTING) ||
+                this.currentFletching != client.getBoostedSkillLevel(Skill.FLETCHING) ||
+                this.combatLevel != client.getLocalPlayer().getCombatLevel();
+    }
 }
