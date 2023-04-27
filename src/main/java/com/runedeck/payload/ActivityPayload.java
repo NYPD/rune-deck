@@ -1,37 +1,41 @@
 package com.runedeck.payload;
 
+import com.runedeck.AnimationCollections;
 import net.runelite.api.Client;
-
-import java.util.Objects;
+import net.runelite.api.Player;
 
 public class ActivityPayload extends Payload {
-    private final boolean isInteracting;
+    static int inactiveTicks = 0;
+    private final boolean isActive;
+
 
     public ActivityPayload(Client client) {
         super(PayloadTypes.ACTIVITY);
-        this.isInteracting = client.getLocalPlayer().isInteracting();
+        this.isActive = ActivityPayload.inactiveTicks < 3 || client.getLocalPlayer().isInteracting();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ActivityPayload that = (ActivityPayload) o;
-        return isInteracting == that.isInteracting;
+    public ActivityPayload(boolean isInteracting) {
+        super(PayloadTypes.ACTIVITY);
+        this.isActive = isInteracting;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(isInteracting);
-    }
-
-    public boolean isInteracting() {
-        return isInteracting;
+    public boolean isActive() {
+        return isActive;
     }
 
     @Override
     public boolean isNewPayload(Client client) {
-        return this.isInteracting() != client.getLocalPlayer().isInteracting();
+        Player player = client.getLocalPlayer();
+        int animation = player.getAnimation();
+
+        // Ignore fishing animations because they are handled by isInteracting()
+        if (animation == -1 || AnimationCollections.isFishingAnimation(animation)) {
+            ActivityPayload.inactiveTicks++;
+        } else {
+            ActivityPayload.inactiveTicks = 0;
+        }
+
+        return this.isActive != (ActivityPayload.inactiveTicks < 3 || client.getLocalPlayer().isInteracting());
     }
 }
 

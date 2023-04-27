@@ -88,17 +88,18 @@ public class RuneDeckPlugin extends Plugin {
             this.runeDeckSocketServer.broadcast(fpsPayloadJSON);
         }
 
+        if (PayloadCache.grandExchangePayload == null || PayloadCache.grandExchangePayload.isNewPayload(this.client)) {
+            PayloadCache.grandExchangePayload = new GrandExchangePayload(this.client);
+            String grandExchangePayloadJSON = this.GSON.toJson(PayloadCache.grandExchangePayload);
+            this.runeDeckSocketServer.broadcast(grandExchangePayloadJSON);
+        }
+
         if (PayloadCache.activityPayload == null || PayloadCache.activityPayload.isNewPayload(this.client)) {
             PayloadCache.activityPayload = new ActivityPayload(this.client);
             String activityPayloadJSON = this.GSON.toJson(PayloadCache.activityPayload);
             this.runeDeckSocketServer.broadcast(activityPayloadJSON);
         }
 
-        if (PayloadCache.grandExchangePayload == null || PayloadCache.grandExchangePayload.isNewPayload(this.client)) {
-            PayloadCache.grandExchangePayload = new GrandExchangePayload(this.client);
-            String grandExchangePayloadJSON = this.GSON.toJson(PayloadCache.grandExchangePayload);
-            this.runeDeckSocketServer.broadcast(grandExchangePayloadJSON);
-        }
     }
 
     @Provides
