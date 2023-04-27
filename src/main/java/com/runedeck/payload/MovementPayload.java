@@ -12,7 +12,7 @@ public class MovementPayload extends Payload {
 
     public MovementPayload(Client client) {
         super(PayloadTypes.MOVEMENT);
-        this.energy = client.getEnergy();
+        this.energy = client.getEnergy() / 100;
         this.coordinateX = client.getLocalPlayer().getWorldLocation().getX();
         this.coordinateY = client.getLocalPlayer().getWorldLocation().getY();
     }
@@ -47,7 +47,7 @@ public class MovementPayload extends Payload {
     public boolean isNewPayload(Client client) {
         return this.getCoordinateX() != client.getLocalPlayer().getWorldLocation().getX()
                 || this.getCoordinateY() != client.getLocalPlayer().getWorldLocation().getY()
-                || this.getEnergy() != client.getEnergy();
+                || this.getEnergy() != client.getEnergy() / 100;
 
     }
 }
