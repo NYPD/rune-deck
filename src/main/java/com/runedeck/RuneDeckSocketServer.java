@@ -3,6 +3,7 @@ package com.runedeck;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 
+import com.google.gson.Gson;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -11,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 public class RuneDeckSocketServer extends WebSocketServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(RuneDeckSocketServer.class);
+
+    private final Gson GSON = new Gson();
 
     public RuneDeckSocketServer(int port) throws UnknownHostException {
         super(new InetSocketAddress(port));
@@ -31,9 +34,19 @@ public class RuneDeckSocketServer extends WebSocketServer {
     }
 
     @Override
-    public void onMessage(WebSocket conn, String message) {
-        LOGGER.info(message);
-        PayloadCache.clearCache();
+    public void onMessage(WebSocket conn, String messageString) {
+
+        try {
+            Message message = this.GSON.fromJson(messageString, Message.class);
+
+            if (message.messageType.equals("clearCache")) {
+                PayloadCache.clearCache();
+            }
+
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage());
+        }
+
     }
 
     @Override
