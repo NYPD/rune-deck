@@ -5,17 +5,20 @@ import net.runelite.api.Client;
 import net.runelite.api.Player;
 
 public class ActivityPayload extends Payload {
-    static int inactiveTicks = 0;
-    private final boolean isActive;
+    private static int inactiveTicks = 0;
+    private boolean isActive;
 
-
+    public ActivityPayload() {
+        super(PayloadType.ACTIVITY);
+    }
+    
     public ActivityPayload(Client client) {
-        super(PayloadTypes.ACTIVITY);
+        super(PayloadType.ACTIVITY);
         this.isActive = ActivityPayload.inactiveTicks < 3 || client.getLocalPlayer().isInteracting();
     }
 
     public ActivityPayload(boolean isInteracting) {
-        super(PayloadTypes.ACTIVITY);
+        super(PayloadType.ACTIVITY);
         this.isActive = isInteracting;
     }
 

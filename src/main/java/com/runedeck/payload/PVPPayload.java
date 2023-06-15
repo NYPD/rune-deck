@@ -7,10 +7,14 @@ import java.util.Objects;
 
 public class PVPPayload extends Payload {
 
-    private final String skullIcon;
+    private String skullIcon;
+    
+    public PVPPayload() {
+        super(PayloadType.PVP);
+    }
 
     public PVPPayload(Client client) {
-        super(PayloadTypes.PVP);
+        super(PayloadType.PVP);
         SkullIcon skullIcon = client.getLocalPlayer().getSkullIcon();
         this.skullIcon = skullIcon != null ? skullIcon.name() : null;
     }

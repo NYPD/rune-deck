@@ -3,13 +3,13 @@ package com.runedeck.payload;
 import net.runelite.api.Client;
 
 abstract public class Payload {
-    private final String type;
+    private PayloadType type;
 
-    protected Payload(String type) {
+    protected Payload(PayloadType type) {
         this.type = type;
     }
 
-    public String getType() {
+    public PayloadType getType() {
         return type;
     }
 

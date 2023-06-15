@@ -1,14 +1,17 @@
-package com.runedeck;
+package com.runedeck.payload;
 
-import com.runedeck.payload.Payload;
 import net.runelite.api.Client;
 import net.runelite.api.World;
 
 public class WorldsPayload extends Payload {
-    private final World[] worlds;
+    private World[] worlds;
+    
+    public WorldsPayload() {
+        super(PayloadType.WORLDS);
+    }
 
     public WorldsPayload(Client client) {
-        super("worlds");
+        super(PayloadType.WORLDS);
         this.worlds = client.getWorldList();
     }
 

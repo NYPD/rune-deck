@@ -1,17 +1,20 @@
 package com.runedeck.payload;
 
-import com.runedeck.PayloadCache;
 import net.runelite.api.Client;
 
 import java.util.Objects;
 
 public class MovementPayload extends Payload {
-    private final int energy;
-    private final int coordinateX;
-    private final int coordinateY;
+    private int energy;
+    private int coordinateX;
+    private int coordinateY;
+    
+    public MovementPayload() {
+        super(PayloadType.MOVEMENT);
+    }
 
     public MovementPayload(Client client) {
-        super(PayloadTypes.MOVEMENT);
+        super(PayloadType.MOVEMENT);
         this.energy = client.getEnergy() / 100;
         this.coordinateX = client.getLocalPlayer().getWorldLocation().getX();
         this.coordinateY = client.getLocalPlayer().getWorldLocation().getY();

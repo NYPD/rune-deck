@@ -7,10 +7,14 @@ import java.util.Objects;
 
 public class OverheadPayload extends Payload {
 
-    private final String overheadIcon;
+    private String overheadIcon;
+    
+    public OverheadPayload() {
+        super(PayloadType.OVERHEAD);
+    }
 
     public OverheadPayload(Client client) {
-        super(PayloadTypes.OVERHEAD);
+        super(PayloadType.OVERHEAD);
 
         HeadIcon overheadIcon = client.getLocalPlayer().getOverheadIcon();
         this.overheadIcon = overheadIcon != null ? overheadIcon.name() : null;

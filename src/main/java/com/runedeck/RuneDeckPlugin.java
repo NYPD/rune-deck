@@ -20,7 +20,7 @@ import javax.inject.Inject;
 public class RuneDeckPlugin extends Plugin {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RuneDeckConfig.class);
-    private final Gson GSON = new Gson();
+    private PayloadCache payloadCache= PayloadCache.getInstance();
 
     @Inject
     private Client client;
@@ -42,65 +42,63 @@ public class RuneDeckPlugin extends Plugin {
 
     @Subscribe
     public void onGameStateChanged(GameStateChanged gameStateChanged) {
-        if (gameStateChanged.getGameState() != GameState.LOGGED_IN && gameStateChanged.getGameState() != GameState.LOADING) {
-            LogoutPayload logoutPayload = new LogoutPayload();
-            String payloadJSON = this.GSON.toJson(logoutPayload);
-            this.runeDeckSocketServer.broadcast(payloadJSON);
-            PayloadCache.clearCache();
-        }
+    	
+    	GameState gameState = gameStateChanged.getGameState();
+    	
+    	boolean userLoggedIn = gameState == GameState.LOGGED_IN;
+    	boolean gameIsLoading = gameState == GameState.LOADING;
+    	
+    	if(userLoggedIn || gameIsLoading) return;
+    	
+        this.runeDeckSocketServer.broadcast(new LogoutPayload());
+        payloadCache.clearCache();
     }
 
     @Subscribe
     public void onGameTick(GameTick tick) {
-        if (PayloadCache.movementPayload == null || PayloadCache.movementPayload.isNewPayload(this.client)) {
-            PayloadCache.movementPayload = new MovementPayload(this.client);
-            String movementPayloadJSON = this.GSON.toJson(PayloadCache.movementPayload);
-            this.runeDeckSocketServer.broadcast(movementPayloadJSON);
+    	
+        if (payloadCache.movementPayload.isNewPayload(this.client)) {
+        	payloadCache.movementPayload = new MovementPayload(this.client);
+            this.runeDeckSocketServer.broadcast(payloadCache.skillsPayload);
         }
 
-        if (PayloadCache.overheadPayload == null || PayloadCache.overheadPayload.isNewPayload(this.client)) {
-            PayloadCache.overheadPayload = new OverheadPayload(this.client);
-            String overheadPayloadJSON = this.GSON.toJson(PayloadCache.overheadPayload);
-            this.runeDeckSocketServer.broadcast(overheadPayloadJSON);
+        if (payloadCache.overheadPayload.isNewPayload(this.client)) {
+            payloadCache.overheadPayload = new OverheadPayload(this.client);
+            this.runeDeckSocketServer.broadcast(payloadCache.skillsPayload);
         }
 
-        if (PayloadCache.skillsPayload == null || PayloadCache.skillsPayload.isNewPayload(this.client)) {
-            PayloadCache.skillsPayload = new SkillsPayload(this.client);
-            String skillsPayloadJSON = this.GSON.toJson(PayloadCache.skillsPayload);
-            this.runeDeckSocketServer.broadcast(skillsPayloadJSON);
+        if (payloadCache.skillsPayload.isNewPayload(this.client)) {
+            payloadCache.skillsPayload = new SkillsPayload(this.client);
+            this.runeDeckSocketServer.broadcast(payloadCache.skillsPayload);
         }
 
-        if (PayloadCache.pvpPayload == null || PayloadCache.pvpPayload.isNewPayload(this.client)) {
-            PayloadCache.pvpPayload = new PVPPayload(this.client);
-            String pvpPayloadJSON = this.GSON.toJson(PayloadCache.pvpPayload);
-            this.runeDeckSocketServer.broadcast(pvpPayloadJSON);
+        if (payloadCache.pvpPayload.isNewPayload(this.client)) {
+            payloadCache.pvpPayload = new PVPPayload(this.client);
+            this.runeDeckSocketServer.broadcast(payloadCache.pvpPayload);
         }
 
-        if (PayloadCache.equipmentPayload == null || PayloadCache.equipmentPayload.isNewPayload(this.client)) {
-            PayloadCache.equipmentPayload = new EquipmentPayload(this.client);
-            String equipmentPayloadJSON = this.GSON.toJson(PayloadCache.equipmentPayload);
-            this.runeDeckSocketServer.broadcast(equipmentPayloadJSON);
+        if (payloadCache.equipmentPayload.isNewPayload(this.client)) {
+            payloadCache.equipmentPayload = new EquipmentPayload(this.client);
+            this.runeDeckSocketServer.broadcast(payloadCache.equipmentPayload);
         }
 
-        if (PayloadCache.fpsPayload == null || PayloadCache.fpsPayload.isNewPayload(this.client)) {
-            PayloadCache.fpsPayload = new FPSPayload(this.client);
-            String fpsPayloadJSON = this.GSON.toJson(PayloadCache.fpsPayload);
-            this.runeDeckSocketServer.broadcast(fpsPayloadJSON);
+        if (payloadCache.fpsPayload.isNewPayload(this.client)) {
+            payloadCache.fpsPayload = new FPSPayload(this.client);
+            this.runeDeckSocketServer.broadcast(payloadCache.fpsPayload);
         }
 
-        if (PayloadCache.grandExchangePayload == null || PayloadCache.grandExchangePayload.isNewPayload(this.client)) {
-            PayloadCache.grandExchangePayload = new GrandExchangePayload(this.client);
-            String grandExchangePayloadJSON = this.GSON.toJson(PayloadCache.grandExchangePayload);
-            this.runeDeckSocketServer.broadcast(grandExchangePayloadJSON);
+        if (payloadCache.grandExchangePayload.isNewPayload(this.client)) {
+            payloadCache.grandExchangePayload = new GrandExchangePayload(this.client);
+            this.runeDeckSocketServer.broadcast(payloadCache.grandExchangePayload);
         }
 
-        if (PayloadCache.activityPayload == null || PayloadCache.activityPayload.isNewPayload(this.client)) {
-            PayloadCache.activityPayload = new ActivityPayload(this.client);
-            String activityPayloadJSON = this.GSON.toJson(PayloadCache.activityPayload);
-            this.runeDeckSocketServer.broadcast(activityPayloadJSON);
+        if (payloadCache.activityPayload.isNewPayload(this.client)) {
+            payloadCache.activityPayload = new ActivityPayload(this.client);
+            this.runeDeckSocketServer.broadcast(payloadCache.activityPayload);
         }
 
     }
+    
 
     @Provides
     RuneDeckConfig provideConfig(ConfigManager configManager) {

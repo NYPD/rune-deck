@@ -1,15 +1,18 @@
 package com.runedeck.payload;
 
-import com.runedeck.PayloadCache;
 import net.runelite.api.Client;
 
 import java.util.Objects;
 
 public class FPSPayload extends Payload {
-    private final int fps;
+    private int fps;
 
+    public FPSPayload() {
+        super(PayloadType.FPS);
+    }
+    
     public FPSPayload(Client client) {
-        super(PayloadTypes.FPS);
+        super(PayloadType.FPS);
         this.fps = client.getFPS();
     }
 

@@ -4,6 +4,8 @@ import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 
 import com.google.gson.Gson;
+import com.runedeck.payload.Payload;
+
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -11,26 +13,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RuneDeckSocketServer extends WebSocketServer {
+	
     private static final Logger LOGGER = LoggerFactory.getLogger(RuneDeckSocketServer.class);
 
     private final Gson GSON = new Gson();
+    private PayloadCache payloadCache= PayloadCache.getInstance();
 
     public RuneDeckSocketServer(int port) throws UnknownHostException {
         super(new InetSocketAddress(port));
     }
+    
+    public void broadcast(Payload payload) {
+    	String payloadJSON = this.GSON.toJson(payload);
+    	super.broadcast(payloadJSON);
+	}
 
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        //conn.send("connected");
-        System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected!");
         LOGGER.info(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected!");
-        PayloadCache.clearCache();
+        payloadCache.clearCache();
     }
 
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        PayloadCache.clearCache();
-        LOGGER.info("Closed connection");
+    	payloadCache.clearCache();
+        LOGGER.info("RuneDeckSocketServer closed connection");
     }
 
     @Override
@@ -40,7 +47,7 @@ public class RuneDeckSocketServer extends WebSocketServer {
             Message message = this.GSON.fromJson(messageString, Message.class);
 
             if (message.messageType.equals("clearCache")) {
-                PayloadCache.clearCache();
+            	payloadCache.clearCache();
             }
 
         } catch (Exception e) {
@@ -51,9 +58,8 @@ public class RuneDeckSocketServer extends WebSocketServer {
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
-        PayloadCache.clearCache();
+    	payloadCache.clearCache();
         LOGGER.error(ex.getMessage());
-        ex.printStackTrace();
         if (conn != null) {
             // some errors like port binding failed may not be assignable to a specific websocket
         }
@@ -61,9 +67,9 @@ public class RuneDeckSocketServer extends WebSocketServer {
 
     @Override
     public void onStart() {
-        PayloadCache.clearCache();
+    	payloadCache.clearCache();
         LOGGER.info("RuneDeckSocketServer started on port: " + this.getPort());
-        System.out.println("RuneDeckSocketServer started on port: " + this.getPort());
         this.setConnectionLostTimeout(60);
     }
+    
 }

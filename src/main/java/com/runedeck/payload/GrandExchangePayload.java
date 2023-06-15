@@ -7,10 +7,14 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class GrandExchangePayload extends Payload {
-    private final Offer[] offers;
+    private Offer[] offers;
 
+    public GrandExchangePayload() {
+        super(PayloadType.GRAND_EXCHANGE);
+    }
+    
     public GrandExchangePayload(Client client) {
-        super(PayloadTypes.GRAND_EXCHANGE);
+        super(PayloadType.GRAND_EXCHANGE);
 
         GrandExchangeOffer[] grandExchangeOffers = client.getGrandExchangeOffers();
 

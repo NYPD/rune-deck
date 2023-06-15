@@ -6,10 +6,14 @@ import net.runelite.api.PlayerComposition;
 import java.util.Arrays;
 
 public class EquipmentPayload extends Payload {
-    private final int[] playerEquipmentIds;
+    private int[] playerEquipmentIds;
 
+    public EquipmentPayload() {
+        super(PayloadType.EQUIPMENT);
+    }
+    
     public EquipmentPayload(Client client) {
-        super(PayloadTypes.EQUIPMENT);
+        super(PayloadType.EQUIPMENT);
 
         PlayerComposition composition = client.getLocalPlayer().getPlayerComposition();
         this.playerEquipmentIds = composition != null ? composition.getEquipmentIds() : null;
